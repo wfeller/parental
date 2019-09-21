@@ -49,8 +49,10 @@ trait HasChildren
         // from the child's boot method as well.
         if (static::class === self::class && ! self::parentIsBooting()) {
             foreach ((new self)->getChildTypes() as $childClass) {
-                /** @var \Illuminate\Database\Eloquent\Model $childClass */
-                $childClass::registerModelEvent($event, $callback);
+                if ($childClass !== self::class) {
+                    /** @var \Illuminate\Database\Eloquent\Model $childClass */
+                    $childClass::registerModelEvent($event, $callback);
+                }
             }
         }
     }
