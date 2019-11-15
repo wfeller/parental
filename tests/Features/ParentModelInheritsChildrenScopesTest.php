@@ -2,13 +2,22 @@
 
 namespace WF\Parental\Tests\Features;
 
+use Illuminate\Foundation\Testing\WithFaker;
+use WF\Parental\DefaultsMissingAliasToParentClass;
+use WF\Parental\ParentScope;
+use WF\Parental\Tests\Models\Car;
 use WF\Parental\Tests\Models\InternationalTrip;
 use WF\Parental\Tests\Models\LocalTrip;
+use WF\Parental\Tests\Models\Plane;
+use WF\Parental\Tests\Models\Train;
 use WF\Parental\Tests\Models\Trip;
+use WF\Parental\Tests\Models\Vehicle;
 use WF\Parental\Tests\TestCase;
 
 class ParentModelInheritsChildrenScopesTest extends TestCase
 {
+    use WithFaker;
+
     /** @test */
     public function simple_scope_inheritance_check()
     {
@@ -68,6 +77,18 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
         $this->assertInstanceOf(InternationalTrip::class, $trips->shift());
     }
 
+    /** @test */
+    public function parent_scope_allows_all_types_if_types_default_to_parent_class()
+    {
+       $this->ensureVehicleHasParentScopeActive();
+
+        $this->createTenVehicles();
+
+        $this->assertInstanceOf(DefaultsMissingAliasToParentClass::class, new Vehicle);
+
+        $this->assertSame(10, Vehicle::query()->count());
+    }
+
     private function createTenTrips()
     {
         Trip::query()->create(['duration' => 1]);
@@ -82,5 +103,38 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
         LocalTrip::query()->create(['duration' => 1]);
         LocalTrip::query()->create(['duration' => 2]);
         LocalTrip::query()->create(['duration' => 3]);
+    }
+
+    private function ensureVehicleHasParentScopeActive()
+    {
+        Car::addGlobalScope('test-scope', function ($q) {
+            $q->whereKeyNot(0);
+        });
+
+        $scopes = array_filter((new Vehicle)->getGlobalScopes(), function ($scope) {
+            return $scope instanceof ParentScope;
+        });
+
+        $this->assertCount(1, $scopes);
+    }
+
+    private function createTenVehicles()
+    {
+        Car::query()->create();
+        Car::query()->create();
+
+        Plane::query()->create();
+        Plane::query()->create();
+
+        Train::query()->create();
+
+        Vehicle::query()->create();
+        Vehicle::query()->create();
+
+        $inheritanceColumn = (new Vehicle)->getInheritanceColumn();
+
+        Vehicle::query()->create([$inheritanceColumn => $this->faker->jobTitle]);
+        Vehicle::query()->create([$inheritanceColumn => $this->faker->jobTitle]);
+        Vehicle::query()->create([$inheritanceColumn => $this->faker->jobTitle]);
     }
 }

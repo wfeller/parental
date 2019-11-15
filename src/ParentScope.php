@@ -2,6 +2,7 @@
 
 namespace WF\Parental;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -23,13 +24,13 @@ class ParentScope implements Scope
         }
 
         $builder->where(function (Builder $builder) use ($parent) {
-            $childColumn = $parent->getInheritanceColumn();
+            $inheritanceColumn = $parent->getInheritanceColumn();
 
             $existingImplementations = $parent->getGlobalScopes();
 
             foreach (static::$registered[get_class($parent)] as $alias => $implementations) {
-                $builder->orWhere(function (Builder $builder) use ($alias, $childColumn, $implementations, $existingImplementations) {
-                    $builder->where($childColumn, $alias);
+                $builder->orWhere(function (Builder $builder) use ($alias, $inheritanceColumn, $implementations, $existingImplementations) {
+                    $builder->where($inheritanceColumn, $alias);
 
                     foreach ($implementations as $key => $implementation) {
                         if (Arr::has($existingImplementations, str_replace($alias.':', '', $key))) {
@@ -41,19 +42,28 @@ class ParentScope implements Scope
                 });
             }
 
-            $builder->orWhere(function (Builder $builder) use ($parent, $childColumn) {
-                $missingChildren = array_diff_key($parent->getChildTypes(), static::$registered[get_class($parent)]);
-                $builder->orWhereIn($childColumn, array_keys($missingChildren))
-                        ->orWhere($childColumn, $parent->getParentAlias())
-                        ->orWhereNull($childColumn);
-            });
+            if ($parent instanceof DefaultsMissingAliasToParentClass) {
+                $builder->orWhere(function (Builder $builder) use ($parent, $inheritanceColumn) {
+                    $builder
+                        ->orWhereNotIn($inheritanceColumn, array_keys(static::$registered[get_class($parent)]))
+                        ->orWhereNull($inheritanceColumn);
+                });
+            } else {
+                $builder->orWhere(function (Builder $builder) use ($parent, $inheritanceColumn) {
+                    $missingChildren = array_diff_key($parent->getChildTypes(), static::$registered[get_class($parent)]);
+                    $builder
+                        ->orWhereIn($inheritanceColumn, array_keys($missingChildren))
+                        ->orWhere($inheritanceColumn, $parent->getParentAlias())
+                        ->orWhereNull($inheritanceColumn);
+                });
+            }
         });
     }
 
     private function applyImplementation(Builder $builder, $implementation) : void
     {
         $builder->where(function (Builder $builder) use ($implementation) {
-            if ($implementation instanceof \Closure) {
+            if ($implementation instanceof Closure) {
                 ($implementation)($builder);
             } elseif ($implementation instanceof Scope) {
                 $implementation->apply($builder, $builder->getModel());
