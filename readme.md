@@ -1,6 +1,6 @@
 # Parental
 
-Parental is a Laravel package, inspired by Tighten and Caleb Porzio, that brings STI (Single Table Inheritance) capabilities to Eloquent.
+Parental is a Laravel package, forked from [calebporzio/parental](https://github.com/calebporzio/parental), that brings STI (Single Table Inheritance) capabilities to Eloquent.
 
 ### What is single table inheritance (STI)?
 
@@ -138,7 +138,3 @@ class User extends Model
     protected $childColumn = 'parental_type';
 }
 ```
-
----
-
-Thanks to [@sschoger](https://twitter.com/steveschoger) for the sick logo design, and [@DanielCoulbourne](https://twitter.com/DCoulbourne) for helping brainstorm the idea on [Twenty Percent Time](http://twentypercent.fm/).
