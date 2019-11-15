@@ -30,20 +30,22 @@ class ParentalServiceProvider extends ServiceProvider
     protected function extendParentNovaResourcesToChildren()
     {
         // We want to ensure that this bit of code runs after resources are registered in Nova
-        $this->app->booted(function () {
-            Nova::serving(function () {
-                $this->setNovaResources();
+        $this->app->booted(static function () {
+            Nova::serving(static function () {
+                static::setNovaResources();
             });
         });
     }
 
-    protected function setNovaResources()
+    protected static function setNovaResources()
     {
         $map = [];
+
         foreach (Nova::$resources as $resource) {
             $parent = $resource::$model;
             $map[$parent] = $resource;
             $traits = class_uses_recursive($parent);
+
             if (isset($traits[HasChildren::class]) && ! isset($traits[HasParent::class])) {
                 foreach ((new $parent)->getChildTypes() as $child) {
                     if (! isset($map[$child])) {
@@ -52,6 +54,7 @@ class ParentalServiceProvider extends ServiceProvider
                 }
             }
         }
+
         Nova::$resourcesByModel = array_merge($map, Nova::$resourcesByModel);
     }
 }

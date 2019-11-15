@@ -64,7 +64,7 @@ class DiscoverChildren extends Command
                     $parent = get_parent_class($class);
                     $children[$parent][$class] = $class;
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 continue;
             }
         }

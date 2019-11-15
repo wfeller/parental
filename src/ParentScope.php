@@ -16,7 +16,7 @@ class ParentScope implements Scope
      * @param \Illuminate\Database\Eloquent\Model|\WF\Parental\HasChildren $parent
      * @return void
      */
-    public function apply(Builder $builder, Model $parent)
+    public function apply(Builder $builder, Model $parent) : void
     {
         if (! isset(static::$registered[get_class($parent)])) {
             return;
@@ -50,7 +50,7 @@ class ParentScope implements Scope
         });
     }
 
-    protected function applyImplementation(Builder $builder, $implementation)
+    private function applyImplementation(Builder $builder, $implementation) : void
     {
         $builder->where(function (Builder $builder) use ($implementation) {
             if ($implementation instanceof \Closure) {
@@ -66,7 +66,7 @@ class ParentScope implements Scope
      * @param string $key
      * @param $implementation
      */
-    public static function registerChild(Model $child, string $key, $implementation)
+    public static function registerChild(Model $child, string $key, $implementation) : void
     {
         static::$registered[get_parent_class($child)][$child->classToAlias(get_class($child))][$key] = $implementation;
     }

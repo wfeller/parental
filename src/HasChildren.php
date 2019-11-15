@@ -11,7 +11,7 @@ trait HasChildren
 
     protected $hasChildren = true;
 
-    protected function initializeHasChildren()
+    protected function initializeHasChildren() : void
     {
         if ($alias = $this->classToAlias(static::class)) {
             $this->setAttribute($this->getInheritanceColumn(), $alias);
@@ -22,7 +22,7 @@ trait HasChildren
         }
     }
 
-    public static function bootHasChildren()
+    protected static function bootHasChildren() : void
     {
         if (static::class === self::class) {
             static::creating(function ($model) {
@@ -41,7 +41,7 @@ trait HasChildren
         }
     }
 
-    protected static function registerModelEvent($event, $callback)
+    protected static function registerModelEvent($event, $callback) : void
     {
         parent::registerModelEvent($event, $callback);
 
@@ -57,7 +57,7 @@ trait HasChildren
         }
     }
 
-    private static function parentIsBooting()
+    private static function parentIsBooting() : bool
     {
         if (! isset(self::$parentBootMethods)) {
             self::$parentBootMethods[] = 'boot';
@@ -84,15 +84,15 @@ trait HasChildren
 
     public function newInstance($attributes = [], $exists = false)
     {
+        $attributes = (array) $attributes;
+
         $model = isset($attributes[$this->getInheritanceColumn()])
             ? $this->getChildModel($attributes)
-            : new static(((array) $attributes));
+            : new static($attributes);
 
         $model->exists = $exists;
 
-        $model->setConnection(
-            $this->getConnectionName()
-        );
+        $model->setConnection($this->getConnectionName());
 
         return $model;
     }
@@ -110,21 +110,19 @@ trait HasChildren
         return $model;
     }
 
-    public function getInheritanceColumn()
+    public function getInheritanceColumn() : string
     {
         return property_exists($this, 'childColumn') ? $this->childColumn : 'type';
     }
 
     protected function getChildModel(array $attributes)
     {
-        $className = $this->classFromAlias(
-            $attributes[$this->getInheritanceColumn()]
-        );
+        $className = $this->classFromAlias($attributes[$this->getInheritanceColumn()]);
 
-        return new $className((array) $attributes);
+        return new $className($attributes);
     }
 
-    public function classFromAlias($aliasOrClass)
+    public function classFromAlias($aliasOrClass) : string
     {
         if ($aliasOrClass === $this->getParentAlias()) {
             return self::class;
@@ -135,7 +133,7 @@ trait HasChildren
             return $types[$aliasOrClass];
         }
 
-        return $aliasOrClass;
+        return $this instanceof DefaultsMissingAliasToParentClass ? self::class : $aliasOrClass;
     }
 
     public function classToAlias($className)
@@ -156,7 +154,7 @@ trait HasChildren
         return property_exists($this, 'parentType') ? $this->parentType : null;
     }
 
-    public function getChildTypes()
+    public function getChildTypes() : array
     {
         return array_flip(array_merge(
             $this->getDiscoveredChildren(),
