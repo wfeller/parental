@@ -7,16 +7,12 @@ use ReflectionClass;
 
 trait HasParent
 {
-    public $hasParent = true;
-
-    public static function bootHasParent()
+    protected static function bootHasParent() : void
     {
         static::creating(function ($model) {
             /** @var HasParent|HasChildren|\Illuminate\Database\Eloquent\Model $model */
             if ($model->parentHasHasChildrenTrait()) {
-                $model->forceFill(
-                    [$model->getInheritanceColumn() => $model->classToAlias(get_class($model))]
-                );
+                $model->forceFill([$model->getInheritanceColumn() => $model->classToAlias(get_class($model))]);
             }
         });
 
@@ -48,7 +44,7 @@ trait HasParent
         return $this->hasChildren ?? false;
     }
 
-    public function getTable()
+    public function getTable() : string
     {
         if (! isset($this->table)) {
             return str_replace('\\', '', Str::snake(Str::plural(class_basename($this->getParentClass()))));
@@ -57,9 +53,9 @@ trait HasParent
         return $this->table;
     }
 
-    public function getForeignKey()
+    public function getForeignKey() : string
     {
-        return Str::snake(class_basename($this->getParentClass())).'_'.$this->primaryKey;
+        return Str::snake(class_basename($this->getParentClass())).'_'.$this->getKeyName();
     }
 
     public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null,
@@ -85,7 +81,7 @@ trait HasParent
         return parent::getMorphClass();
     }
 
-    protected function getParentClass()
+    protected function getParentClass() : string
     {
         static $parentClassName;
 
