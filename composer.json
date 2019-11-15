@@ -1,35 +1,34 @@
 {
-    "name": "tightenco/parental",
+    "name": "wfeller/parental",
     "description": "A simple eloquent trait that allows relationships to be accessed through child models.",
     "license": "MIT",
     "authors": [
-        {
-            "name": "Caleb Porzio",
-            "email": "calebporzio@gmail.com"
-        }
+        {"name": "Caleb Porzio", "email": "calebporzio@gmail.com"},
+        {"name": "William", "homepage": "https://github.com/wfeller"}
     ],
     "require": {
+        "php": "^7.2",
         "illuminate/database": "^5.8|^6.0",
         "hanneskod/classtools": "~1.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^3.8",
+        "orchestra/testbench": "^3.8|^4.0",
         "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
-            "Tightenco\\Parental\\": "src/"
+            "WF\\Parental\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tightenco\\Parental\\Tests\\": "tests/"
+            "WF\\Parental\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Tightenco\\Parental\\Providers\\ParentalServiceProvider"
+                "WF\\Parental\\Providers\\ParentalServiceProvider"
             ]
         }
     },

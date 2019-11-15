@@ -1,8 +1,8 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Observers;
+namespace WF\Parental\Tests\Observers;
 
-use Tightenco\Parental\Tests\Models\Vehicle;
+use WF\Parental\Tests\Models\Vehicle;
 
 class VehicleObserver
 {

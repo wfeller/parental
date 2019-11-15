@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental;
+namespace WF\Parental;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,7 @@ class ParentScope implements Scope
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @param \Illuminate\Database\Eloquent\Model|\Tightenco\Parental\HasChildren $parent
+     * @param \Illuminate\Database\Eloquent\Model|\WF\Parental\HasChildren $parent
      * @return void
      */
     public function apply(Builder $builder, Model $parent)
@@ -62,7 +62,7 @@ class ParentScope implements Scope
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|\Tightenco\Parental\HasParent|\Tightenco\Parental\HasChildren $child
+     * @param \Illuminate\Database\Eloquent\Model|\WF\Parental\HasParent|\WF\Parental\HasChildren $child
      * @param string $key
      * @param $implementation
      */

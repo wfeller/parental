@@ -1,13 +1,13 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace WF\Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Train;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\Observers\CarObserver;
-use Tightenco\Parental\Tests\Observers\VehicleObserver;
-use Tightenco\Parental\Tests\TestCase;
+use WF\Parental\Tests\Models\Car;
+use WF\Parental\Tests\Models\Train;
+use WF\Parental\Tests\Models\Vehicle;
+use WF\Parental\Tests\Observers\CarObserver;
+use WF\Parental\Tests\Observers\VehicleObserver;
+use WF\Parental\Tests\TestCase;
 
 class ParentChildEventRegistrationTest extends TestCase
 {

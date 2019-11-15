@@ -1,12 +1,13 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace WF\Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Plane;
-use Tightenco\Parental\Tests\Models\Trip;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\TestCase;
+use WF\Parental\DefaultsMissingAliasToParentClass;
+use WF\Parental\Tests\Models\Car;
+use WF\Parental\Tests\Models\Plane;
+use WF\Parental\Tests\Models\Trip;
+use WF\Parental\Tests\Models\Vehicle;
+use WF\Parental\Tests\TestCase;
 
 class ModelAliasesTest extends TestCase
 {

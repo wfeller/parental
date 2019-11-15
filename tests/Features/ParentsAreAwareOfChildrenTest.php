@@ -1,15 +1,17 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace WF\Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Driver;
-use Tightenco\Parental\Tests\Models\GuardedChild;
-use Tightenco\Parental\Tests\Models\GuardedParent;
-use Tightenco\Parental\Tests\Models\Passenger;
-use Tightenco\Parental\Tests\Models\Plane;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\TestCase;
+use WF\Parental\Tests\Models\Car;
+use WF\Parental\Tests\Models\Driver;
+use WF\Parental\Tests\Models\GuardedChild;
+use WF\Parental\Tests\Models\GuardedParent;
+use WF\Parental\Tests\Models\InternationalTrip;
+use WF\Parental\Tests\Models\Passenger;
+use WF\Parental\Tests\Models\Plane;
+use WF\Parental\Tests\Models\Trip;
+use WF\Parental\Tests\Models\Vehicle;
+use WF\Parental\Tests\TestCase;
 
 class ParentsAreAwareOfChildrenTest extends TestCase
 {

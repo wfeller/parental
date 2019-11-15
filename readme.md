@@ -1,8 +1,6 @@
-![Parental - Use single table inheritance in your Laravel App](parental-banner.png)
-
 # Parental
 
-Parental is a Laravel package, developed by Tighten, that brings STI (Single Table Inheritance) capabilities to Eloquent.
+Parental is a Laravel package, inspired by Tighten and Caleb Porzio, that brings STI (Single Table Inheritance) capabilities to Eloquent.
 
 ### What is single table inheritance (STI)?
 
@@ -11,7 +9,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 ## Installation
 
 ```bash
-composer require "tightenco/parental=0.6"
+composer require "wfeller/parental"
 ```
 
 Each time you add or remove child classes, you'll want to do the following:
@@ -37,7 +35,7 @@ class User extends Model
 // The "child"
 class Admin extends User
 {
-    use \Tightenco\Parental\HasParent;
+    use \WF\Parental\HasParent;
 
     public function impersonate($user) {
         ...
@@ -69,7 +67,7 @@ Schema::table('users', function ($table) {
 // The "parent"
 class User extends Model
 {
-    use Tightenco\Parental\HasChildren;
+    use WF\Parental\HasChildren;
 
     protected $fillable = ['type'];
 }
@@ -79,7 +77,7 @@ class User extends Model
 // A "child"
 class Admin extends User
 {
-    use Tightenco\Parental\HasParent;
+    use \WF\Parental\HasParent;
 }
 ```
 
@@ -87,7 +85,7 @@ class Admin extends User
 // Another "child"
 class Guest extends User
 {
-    use Tightenco\Parental\HasParent;
+    use \WF\Parental\HasParent;
 }
 ```
 
@@ -112,7 +110,7 @@ If you don't want to store raw class names in the type column, you can override 
 ```php
 class User extends Model
 {
-    use Tightenco\Parental\HasChildren;
+    use \WF\Parental\HasChildren;
 
     protected $fillable = ['type'];
 
@@ -133,7 +131,7 @@ You can override the default type column by setting the `$childColumn` property 
 ```php
 class User extends Model
 {
-    use Tightenco\Parental\HasChildren;
+    use \WF\Parental\HasChildren;
 
     protected $fillable = ['parental_type'];
 

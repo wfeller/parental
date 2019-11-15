@@ -1,12 +1,12 @@
 <?php
 
-namespace Tightenco\Parental\Providers;
+namespace WF\Parental\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Nova;
-use Tightenco\Parental\Commands\DiscoverChildren;
-use Tightenco\Parental\HasChildren;
-use Tightenco\Parental\HasParent;
+use WF\Parental\Commands\DiscoverChildren;
+use WF\Parental\HasChildren;
+use WF\Parental\HasParent;
 
 class ParentalServiceProvider extends ServiceProvider
 {

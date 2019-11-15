@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental\Commands;
+namespace WF\Parental\Commands;
 
 use hanneskod\classtools\Iterator\ClassIterator;
 use Illuminate\Console\Command;
@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
-use Tightenco\Parental\HasChildren;
-use Tightenco\Parental\HasParent;
+use WF\Parental\HasChildren;
+use WF\Parental\HasParent;
 
 class DiscoverChildren extends Command
 {

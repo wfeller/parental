@@ -1,9 +1,9 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Models;
+namespace WF\Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasParent;
+use WF\Parental\HasParent;
 
 class InternationalTrip extends Trip
 {

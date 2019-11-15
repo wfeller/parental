@@ -1,8 +1,8 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Models;
+namespace WF\Parental\Tests\Models;
 
-use Tightenco\Parental\HasParent;
+use WF\Parental\HasParent;
 
 class Plane extends Vehicle
 {

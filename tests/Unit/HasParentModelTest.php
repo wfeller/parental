@@ -1,10 +1,10 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Unit;
+namespace WF\Parental\Tests\Unit;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasParent;
-use Tightenco\Parental\Tests\TestCase;
+use WF\Parental\HasParent;
+use WF\Parental\Tests\TestCase;
 
 class HasParentTest extends TestCase
 {

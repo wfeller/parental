@@ -1,14 +1,14 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace WF\Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\Admin;
-use Tightenco\Parental\Tests\Models\Car;
-use Tightenco\Parental\Tests\Models\Driver;
-use Tightenco\Parental\Tests\Models\Passenger;
-use Tightenco\Parental\Tests\Models\User;
-use Tightenco\Parental\Tests\Models\Vehicle;
-use Tightenco\Parental\Tests\TestCase;
+use WF\Parental\Tests\Models\Admin;
+use WF\Parental\Tests\Models\Car;
+use WF\Parental\Tests\Models\Driver;
+use WF\Parental\Tests\Models\Passenger;
+use WF\Parental\Tests\Models\User;
+use WF\Parental\Tests\Models\Vehicle;
+use WF\Parental\Tests\TestCase;
 
 class ChildModelsAreAutomaticallyScopedTest extends TestCase
 {

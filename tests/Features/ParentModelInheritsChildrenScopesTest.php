@@ -1,11 +1,11 @@
 <?php
 
-namespace Tightenco\Parental\Tests\Features;
+namespace WF\Parental\Tests\Features;
 
-use Tightenco\Parental\Tests\Models\InternationalTrip;
-use Tightenco\Parental\Tests\Models\LocalTrip;
-use Tightenco\Parental\Tests\Models\Trip;
-use Tightenco\Parental\Tests\TestCase;
+use WF\Parental\Tests\Models\InternationalTrip;
+use WF\Parental\Tests\Models\LocalTrip;
+use WF\Parental\Tests\Models\Trip;
+use WF\Parental\Tests\TestCase;
 
 class ParentModelInheritsChildrenScopesTest extends TestCase
 {

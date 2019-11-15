@@ -1,6 +1,6 @@
 <?php
 
-namespace Tightenco\Parental;
+namespace WF\Parental;
 
 use Illuminate\Support\Str;
 use ReflectionClass;

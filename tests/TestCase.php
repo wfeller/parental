@@ -1,11 +1,11 @@
 <?php
 
-namespace Tightenco\Parental\Tests;
+namespace WF\Parental\Tests;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Tightenco\Parental\Providers\ParentalServiceProvider;
+use WF\Parental\Providers\ParentalServiceProvider;
 
 class TestCase extends BaseTestCase
 {
