@@ -99,9 +99,11 @@ trait HasChildren
 
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        $model = $this->newInstance(Arr::only((array) $attributes, $this->getInheritanceColumn()), true);
+        $attributes = (array) $attributes;
 
-        $model->setRawAttributes((array) $attributes, true);
+        $model = $this->newInstance(Arr::only($attributes, $this->getInheritanceColumn()), true);
+
+        $model->setRawAttributes($attributes, true);
 
         $model->setConnection($connection ?: $this->getConnectionName());
 

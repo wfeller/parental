@@ -3,9 +3,10 @@
 namespace WF\Parental\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Tightenco\Parental\HasChildren;
+use WF\Parental\DefaultsMissingAliasToParentClass;
+use WF\Parental\HasChildren;
 
-class Vehicle extends Model
+class Vehicle extends Model implements DefaultsMissingAliasToParentClass
 {
     use HasChildren;
 

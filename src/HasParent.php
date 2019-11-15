@@ -39,7 +39,18 @@ trait HasParent
         return $implementation;
     }
 
-    public function parentHasHasChildrenTrait()
+    public function newInstance($attributes = [], $exists = false)
+    {
+        $attributes = (array) $attributes;
+
+        if ($this->parentHasHasChildrenTrait()) {
+            $attributes[$this->getInheritanceColumn()] = $this->classToAlias(static::class);
+        }
+
+        return parent::newInstance($attributes, $exists);
+    }
+
+    public function parentHasHasChildrenTrait() : bool
     {
         return $this->hasChildren ?? false;
     }

@@ -56,4 +56,30 @@ class ModelAliasesTest extends TestCase
         $this->assertEquals('car', (new Car)->type);
         $this->assertEquals(Plane::class, (new Plane)->type);
     }
+
+    /** @test */
+    public function it_defaults_to_the_parent_class_if_child_class_alias_is_not_defined()
+    {
+        $this->assertInstanceOf(DefaultsMissingAliasToParentClass::class, new Vehicle);
+
+        $bike = Vehicle::query()->create(['type' => 'bike']);
+
+        $this->assertSame('bike', $bike->type);
+
+        $copy = $bike->fresh();
+
+        $this->assertSame(Vehicle::class, get_class($bike));
+        $this->assertSame(Vehicle::class, get_class($copy));
+    }
+
+    /** @test */
+    public function it_throws_if_child_class_alias_not_defined_and_interface_not_implemented()
+    {
+        $this->assertNotInstanceOf(DefaultsMissingAliasToParentClass::class, new Trip);
+
+        $this->expectException(\Throwable::class);
+        $this->expectExceptionMessage("Class 'invalid-trip-type' not found");
+
+        Trip::query()->create([(new Trip)->getInheritanceColumn() => 'invalid-trip-type']);
+    }
 }

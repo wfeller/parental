@@ -24,10 +24,25 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     }
 
     /** @test */
+    public function it_correctly_sets_the_type_when_creating_a_child_instance_even_if_given_type_is_wrong()
+    {
+        $wrongType = Car::query()->create(['type' => "I Like Making Mistakes 🤪"])->fresh();
+        $when_i_grow_up_ill_be_an_airplane = Car::create(['type' => Plane::class])->fresh();
+
+        $inheritanceColumn = (new Trip)->getInheritanceColumn();
+        $someKindOfTrip = InternationalTrip::query()->create([$inheritanceColumn => 'will be overridden'])->fresh();
+
+        $this->assertInstanceOf(Car::class, $wrongType);
+        $this->assertInstanceOf(Car::class, $when_i_grow_up_ill_be_an_airplane);
+        $this->assertSame(InternationalTrip::class, $someKindOfTrip->{$inheritanceColumn});
+        $this->assertInstanceOf(InternationalTrip::class, $someKindOfTrip);
+    }
+
+    /** @test */
     function vehicle_all_method_returns_child_models()
     {
-        Car::create(['type' => Car::class]);
-        Plane::create(['type' => Plane::class]);
+        Car::create();
+        Plane::create();
 
         $vehicles = Vehicle::all();
 
@@ -51,8 +66,8 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     /** @test */
     function vehicle_query_builder_get_method_returns_child_models()
     {
-        Car::create(['type' => Car::class]);
-        Plane::create(['type' => Plane::class]);
+        Car::create();
+        Plane::create();
         Vehicle::create();
 
         $vehicles = Vehicle::query()->get();
@@ -66,10 +81,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     function has_many_returns_child_models()
     {
         $driver = Driver::create(['name' => 'Joe']);
-        Car::create([
-            'type' => Car::class,
-            'driver_id' => $driver->id,
-        ]);
+        Car::create(['driver_id' => $driver->id]);
 
         $vehicleA = $driver->vehicles()->first();
         $vehicleB = $driver->vehicles->first();
@@ -81,7 +93,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     /** @test */
     function belongs_to_returns_child_models()
     {
-        $car = Car::create(['type' => Car::class]);
+        $car = Car::create();
         $passenger = Passenger::create([
             'name' => 'Joe',
             'vehicle_id' => $car->id,
@@ -95,7 +107,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
     /** @test */
     function many_to_many_returns_child_models()
     {
-        $car = Car::create(['type' => Car::class]);
+        $car = Car::create();
         $trip = $car->trips()->create([]);
 
         $vehicleA = $trip->vehicles()->first();
