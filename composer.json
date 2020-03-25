@@ -8,11 +8,11 @@
     ],
     "require": {
         "php": "^7.2",
-        "illuminate/database": "^5.8|^6.0",
+        "illuminate/database": "^6.0|^7.0",
         "hanneskod/classtools": "~1.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^3.8|^4.0",
+        "orchestra/testbench": "^3.8|^4.0|^5.0",
         "phpunit/phpunit": "^8.0"
     },
     "autoload": {
