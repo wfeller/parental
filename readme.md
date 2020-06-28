@@ -1,10 +1,21 @@
 # Parental
 
+[![Plant Tree](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/wfeller/parental)
+[![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen?style=for-the-badge)](https://plant.treeware.earth/wfeller/parental)
+
 Parental is a Laravel package, forked from [calebporzio/parental](https://github.com/calebporzio/parental), that brings STI (Single Table Inheritance) capabilities to Eloquent.
 
 ### What is single table inheritance (STI)?
 
 It's a fancy name for a simple concept: Extending a model (usually to add specific behavior), but referencing the same table.
+
+## Licence
+
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/wfeller/parental) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+
+You can buy trees here [offset.earth/treeware](https://plant.treeware.earth/{vendor}/{package})
+
+Read more about Treeware at [treeware.earth](http://treeware.earth)
 
 ## Installation
 
