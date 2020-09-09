@@ -24,7 +24,7 @@ class ParentScope implements Scope
         }
 
         $builder->where(function (Builder $builder) use ($parent) {
-            $inheritanceColumn = $parent->getInheritanceColumn();
+            $inheritanceColumn = $parent->qualifyColumn($parent->getInheritanceColumn());
 
             $existingImplementations = $parent->getGlobalScopes();
 
