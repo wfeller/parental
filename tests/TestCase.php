@@ -2,6 +2,7 @@
 
 namespace WF\Parental\Tests;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -24,7 +25,9 @@ class TestCase extends BaseTestCase
 
         $this->runMigrations();
 
-        $this->withFactories(__DIR__ . '/factories');
+        Factory::guessFactoryNamesUsing(static function (string $modelName) {
+            return sprintf("Database\\Factories\\%sFactory", class_basename($modelName));
+        });
 
         $this->app->register(ParentalServiceProvider::class);
 

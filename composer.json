@@ -8,12 +8,12 @@
     ],
     "require": {
         "php": "^7.2",
-        "illuminate/database": "^6.0|^7.0",
+        "illuminate/database": "^7.0|^8.0",
         "hanneskod/classtools": "~1.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^3.8|^4.0|^5.0",
-        "phpunit/phpunit": "^8.0"
+        "orchestra/testbench": "^4.0|^5.0|^6.0",
+        "phpunit/phpunit": "^8.0|^9.0"
     },
     "autoload": {
         "psr-4": {
@@ -22,7 +22,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "WF\\Parental\\Tests\\": "tests/"
+            "WF\\Parental\\Tests\\": "tests/",
+            "Database\\Factories\\": "tests/factories/"
         }
     },
     "extra": {
