@@ -7,7 +7,7 @@
         {"name": "William", "homepage": "https://github.com/wfeller"}
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2|^8.0",
         "illuminate/database": "^7.0|^8.0",
         "hanneskod/classtools": "~1.0"
     },
