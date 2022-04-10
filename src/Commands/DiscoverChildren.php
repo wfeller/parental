@@ -2,12 +2,13 @@
 
 namespace WF\Parental\Commands;
 
-use hanneskod\classtools\Iterator\ClassIterator;
+use Gnugat\NomoSpaco\File\FileRepository;
+use Gnugat\NomoSpaco\FqcnRepository;
+use Gnugat\NomoSpaco\Token\ParserFactory;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
 use WF\Parental\HasChildren;
 use WF\Parental\HasParent;
 
@@ -47,25 +48,27 @@ class DiscoverChildren extends Command
 
     private function findChildren()
     {
-        $finder = new Finder;
-        $iter = new ClassIterator($finder->in(config('parental.model_directories', [])));
         $children = [];
 
-        foreach ($iter->getClassMap() as $class => $fileInfo) {
-            try {
-                if (! is_a($class, Model::class, true)) {
-                    continue;
-                }
-                $traits = class_uses_recursive($class);
+        $repository = new FqcnRepository(new FileRepository, new ParserFactory);
 
-                if (in_array(HasParent::class, $traits) // It's a child
-                    && in_array(HasChildren::class, $traits) // and the parent has the parent trait
-                ) {
-                    $parent = get_parent_class($class);
-                    $children[$parent][$class] = $class;
+        foreach (config('parental.model_directories', []) as $directory) {
+            foreach ($repository->findIn($directory) as $class) {
+                try {
+                    if (! is_a($class, Model::class, true)) {
+                        continue;
+                    }
+
+                    $traits = class_uses_recursive($class);
+
+                    if (in_array(HasParent::class, $traits) && // It's a child
+                        in_array(HasChildren::class, $traits)  // and the parent has the parent trait
+                    ) {
+                        $parent = get_parent_class($class);
+                        $children[$parent][$class] = $class;
+                    }
+                } catch (\Throwable) {
                 }
-            } catch (\Throwable $e) {
-                continue;
             }
         }
 

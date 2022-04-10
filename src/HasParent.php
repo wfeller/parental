@@ -25,7 +25,7 @@ trait HasParent
         });
     }
 
-    public static function addGlobalScope($scope, \Closure $implementation = null)
+    public static function addGlobalScope($scope, $implementation = null)
     {
         $implementation = parent::addGlobalScope($scope, $implementation);
         $child = new static;

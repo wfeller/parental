@@ -78,7 +78,7 @@ class ModelAliasesTest extends TestCase
         $this->assertNotInstanceOf(DefaultsMissingAliasToParentClass::class, new Trip);
 
         $this->expectException(\Throwable::class);
-        $this->expectExceptionMessage("Class 'invalid-trip-type' not found");
+        $this->expectExceptionMessage('Class "invalid-trip-type" not found');
 
         Trip::query()->create([(new Trip)->getInheritanceColumn() => 'invalid-trip-type']);
     }

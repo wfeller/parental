@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use WF\Parental\HasParent;
 use WF\Parental\Tests\TestCase;
 
-class HasParentTest extends TestCase
+class HasParentModelTest extends TestCase
 {
     /** @test */
     function child_model_has_table_name_of_parent_model()
