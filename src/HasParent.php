@@ -28,13 +28,18 @@ trait HasParent
     public static function addGlobalScope($scope, $implementation = null)
     {
         $implementation = parent::addGlobalScope($scope, $implementation);
-        $child = new static;
-
-        if ($scope !== 'parental' && $child->parentHasHasChildrenTrait()) {
-            $key = array_search($implementation, static::$globalScopes[static::class]);
-            $key = $child->classToAlias(static::class).':'.$key;
-            ParentScope::registerChild($child, $key, $implementation);
-        }
+        
+        // Defer child instantiation to avoid Laravel 13 booting restrictions
+        static::created(function ($model) use ($scope, $implementation) {
+            if (!static::hasGlobalMacro('parentalScopeRegistered')) {
+                if ($scope !== 'parental' && $model->parentHasHasChildrenTrait()) {
+                    $key = array_search($implementation, $model->getGlobalScopes()[static::class]);
+                    $key = $model->classToAlias(static::class).':'.$key;
+                    ParentScope::registerChild($model, $key, $implementation);
+                }
+                static::macro('parentalScopeRegistered', true);
+            }
+        });
 
         return $implementation;
     }

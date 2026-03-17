@@ -32,10 +32,16 @@ trait HasChildren
                 }
             });
 
-            foreach ((new self)->getChildTypes() as $childClass) {
-                // Just booting all the child classes to make sure their base global scopes get registered
-                new $childClass;
-            }
+            // Defer child class instantiation to avoid Laravel 13 booting restrictions
+            static::created(function ($model) {
+                if (!static::hasGlobalMacro('parentalChildrenBooted')) {
+                    foreach ((new self)->getChildTypes() as $childClass) {
+                        // Just booting all the child classes to make sure their base global scopes get registered
+                        new $childClass;
+                    }
+                    static::macro('parentalChildrenBooted', true);
+                }
+            });
 
             static::addGlobalScope(new ParentScope);
         }
@@ -48,12 +54,18 @@ trait HasChildren
         // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
         // from the child's boot method as well.
         if (static::class === self::class && ! self::parentIsBooting()) {
-            foreach ((new self)->getChildTypes() as $childClass) {
-                if ($childClass !== self::class) {
-                    /** @var \Illuminate\Database\Eloquent\Model $childClass */
-                    $childClass::registerModelEvent($event, $callback);
+            // Defer child class event registration to avoid Laravel 13 booting restrictions
+            static::created(function ($model) use ($event, $callback) {
+                if (!static::hasGlobalMacro('parentalEventRegistered')) {
+                    foreach ((new self)->getChildTypes() as $childClass) {
+                        if ($childClass !== self::class) {
+                            /** @var \Illuminate\Database\Eloquent\Model $childClass */
+                            $childClass::registerModelEvent($event, $callback);
+                        }
+                    }
+                    static::macro('parentalEventRegistered', true);
                 }
-            }
+            });
         }
     }
 
