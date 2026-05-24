@@ -101,6 +101,10 @@ trait HasChildren
 
     public function classFromAlias($aliasOrClass) : string
     {
+        if ($aliasOrClass === null) {
+            return self::class;
+        }
+
         if ($aliasOrClass === $this->getParentAlias()) {
             return self::class;
         }
