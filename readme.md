@@ -11,7 +11,7 @@ It's a fancy name for a simple concept: Extending a model (usually to add specif
 
 ## Licence
 
-This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/wfeller/parental) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/wfeller/parental) to thank us for our work. By contributing to the Treeware forest you'll be creating employment for local families and restoring wildlife habitats.
 
 You can buy trees here [offset.earth/treeware](https://plant.treeware.earth/{vendor}/{package})
 
@@ -22,15 +22,6 @@ Read more about Treeware at [treeware.earth](http://treeware.earth)
 ```bash
 composer require "wfeller/parental"
 ```
-
-Each time you add or remove child classes, you'll want to do the following:
-```bash
-php artisan parental:discover-children
-```
-
-This artisan command will simplify the following:
-- Laravel Nova resource inheritance (when children don't already have a dedicated Nova resource)
-- Adding child global scopes when querying parent
 
 ## Simple Usage
 
@@ -149,3 +140,43 @@ class User extends Model
     protected $childColumn = 'parental_type';
 }
 ```
+
+## Parent Type / Default Type Alias
+
+You can optionally set a default type value for parent model instances using the `$parentType` property. This is useful when your parent rows should have a specific type identifier rather than `NULL`.
+
+```php
+class User extends Model
+{
+    use \WF\Parental\HasChildren;
+
+    protected $parentType = 'user';
+}
+```
+
+Now when you create a plain `User` instance, the `type` column will be set to `user` instead of `NULL`.
+
+## Handling Unknown Type Values
+
+By default, if a row in your database has an unknown type value (one that doesn't match any class in `$childTypes`), Parental will throw a `Class not found` error when hydrating the model.
+
+If you want unknown type values to gracefully fall back to the parent class instead of throwing an error, implement the `DefaultsMissingAliasToParentClass` interface on your parent model:
+
+```php
+use WF\Parental\DefaultsMissingAliasToParentClass;
+use WF\Parental\HasChildren;
+
+class Vehicle extends Model implements DefaultsMissingAliasToParentClass
+{
+    use HasChildren;
+
+    protected $childTypes = [
+        'car' => Car::class,
+    ];
+}
+```
+
+With this interface, any type value that isn't `"car"` will instantiate a plain `Vehicle` instead of throwing an error. This is especially useful when:
+- Working with legacy databases that contain stale or inconsistent type values
+- Rolling out STI gradually across existing data
+- You need defensive behaviour in production where bad data should never crash a page load
