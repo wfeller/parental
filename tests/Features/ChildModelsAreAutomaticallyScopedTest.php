@@ -2,6 +2,7 @@
 
 namespace WF\Parental\Tests\Features;
 
+use PHPUnit\Framework\Attributes\Test;
 use WF\Parental\Tests\Models\Admin;
 use WF\Parental\Tests\Models\Car;
 use WF\Parental\Tests\Models\Driver;
@@ -12,7 +13,7 @@ use WF\Parental\Tests\TestCase;
 
 class ChildModelsAreAutomaticallyScopedTest extends TestCase
 {
-    /** @test */
+    #[Test]
     function child_is_scoped_based_on_type_column()
     {
         Car::create();
@@ -22,7 +23,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
         $this->assertCount(1, Car::all());
     }
 
-    /** @test */
+    #[Test]
     function child_without_type_column_isnt_scoped()
     {
         Admin::create();
@@ -32,7 +33,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
         $this->assertCount(2, Admin::all());
     }
 
-    /** @test */
+    #[Test]
     function child_is_scoped_when_accessed_from_belongs_to()
     {
         $car = Car::create();
@@ -49,7 +50,7 @@ class ChildModelsAreAutomaticallyScopedTest extends TestCase
         $this->assertTrue($passenger->fresh()->vehicle->is($car));
     }
 
-    /** @test */
+    #[Test]
     function child_is_scoped_when_accessed_from_has_many()
     {
         $driver = Driver::create(['name' => 'joe']);

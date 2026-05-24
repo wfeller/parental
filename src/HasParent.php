@@ -25,25 +25,6 @@ trait HasParent
         });
     }
 
-    public static function addGlobalScope($scope, $implementation = null)
-    {
-        $implementation = parent::addGlobalScope($scope, $implementation);
-        
-        // Defer child instantiation to avoid Laravel 13 booting restrictions
-        static::created(function ($model) use ($scope, $implementation) {
-            if (!static::hasGlobalMacro('parentalScopeRegistered')) {
-                if ($scope !== 'parental' && $model->parentHasHasChildrenTrait()) {
-                    $key = array_search($implementation, $model->getGlobalScopes()[static::class]);
-                    $key = $model->classToAlias(static::class).':'.$key;
-                    ParentScope::registerChild($model, $key, $implementation);
-                }
-                static::macro('parentalScopeRegistered', true);
-            }
-        });
-
-        return $implementation;
-    }
-
     public function newInstance($attributes = [], $exists = false)
     {
         $attributes = (array) $attributes;
@@ -99,8 +80,8 @@ trait HasParent
 
     protected function getParentClass() : string
     {
-        static $parentClassName;
+        static $parentClassName = [];
 
-        return $parentClassName ?: $parentClassName = (new ReflectionClass($this))->getParentClass()->getName();
+        return $parentClassName[static::class] ??= (new ReflectionClass($this))->getParentClass()->getName();
     }
 }

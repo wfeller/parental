@@ -10,15 +10,6 @@ use WF\Parental\Providers\ParentalServiceProvider;
 
 class TestCase extends BaseTestCase
 {
-    protected static $initialChildren = '';
-
-    public static function setUpBeforeClass() : void
-    {
-        parent::setUpBeforeClass();
-
-        static::$initialChildren = file_get_contents(__DIR__.'/discovered-children.php');
-    }
-
     public function setUp() : void
     {
         parent::setUp();
@@ -28,19 +19,6 @@ class TestCase extends BaseTestCase
         Factory::guessFactoryNamesUsing(static function (string $modelName) {
             return sprintf("Database\\Factories\\%sFactory", class_basename($modelName));
         });
-
-        $this->app->register(ParentalServiceProvider::class);
-
-        config()->set('parental.discovered_children_path', __DIR__.'/discovered-children.php');
-        config()->set('parental.model_directories', array_merge(config('parental.model_directories', []), [__DIR__.'/Models']));
-        Artisan::call('parental:discover-children');
-    }
-
-    public static function tearDownAfterClass() : void
-    {
-        parent::tearDownAfterClass();
-
-        file_put_contents(__DIR__.'/discovered-children.php', static::$initialChildren);
     }
 
     protected function getEnvironmentSetUp($app)

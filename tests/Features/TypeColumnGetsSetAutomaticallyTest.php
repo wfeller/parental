@@ -2,15 +2,16 @@
 
 namespace WF\Parental\Tests\Features;
 
+use PHPUnit\Framework\Attributes\Test;
 use WF\Parental\Tests\Models\Car;
 use WF\Parental\Tests\Models\Driver;
 use WF\Parental\Tests\Models\InternationalTrip;
 use WF\Parental\Tests\Models\Trip;
 use WF\Parental\Tests\TestCase;
 
-class TypeColumnGetsSetAutomatically extends TestCase
+class TypeColumnGetsSetAutomaticallyTest extends TestCase
 {
-    /** @test */
+    #[Test]
     function type_column_gets_set_on_creation()
     {
         $car = Car::create();
@@ -18,7 +19,7 @@ class TypeColumnGetsSetAutomatically extends TestCase
         $this->assertNotNull($car->fresh()->type);
     }
 
-    /** @test */
+    #[Test]
     function type_column_gets_set_on_creation_from_many_to_many_relationship()
     {
         $trip = Trip::create();
@@ -27,7 +28,7 @@ class TypeColumnGetsSetAutomatically extends TestCase
         $this->assertNotNull($car->fresh()->type);
     }
 
-    /** @test */
+    #[Test]
     function type_column_gets_set_on_creation_from_has_many_relationship()
     {
         $driver = Driver::create(['name' => 'Joe']);
@@ -36,7 +37,7 @@ class TypeColumnGetsSetAutomatically extends TestCase
         $this->assertNotNull($car->fresh()->type);
     }
 
-    /** @test */
+    #[Test]
     function type_column_gets_set_on_saving_from_has_many_relationship()
     {
         $driver = Driver::create(['name' => 'Joe']);
@@ -45,15 +46,15 @@ class TypeColumnGetsSetAutomatically extends TestCase
         $this->assertNotNull($car->fresh()->type);
     }
 
-    /** @test */
+    #[Test]
     function type_column_gets_set_on_creation_from_a_model_factory()
     {
-        $car = factory(Car::class)->create();
+        $car = Car::factory()->create();
 
         $this->assertNotNull($car->type);
     }
 
-    /** @test */
+    #[Test]
     function custom_type_column_gets_used()
     {
         $internationalTrip = InternationalTrip::create();

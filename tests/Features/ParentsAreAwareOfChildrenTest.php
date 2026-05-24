@@ -2,6 +2,7 @@
 
 namespace WF\Parental\Tests\Features;
 
+use PHPUnit\Framework\Attributes\Test;
 use WF\Parental\Tests\Models\Car;
 use WF\Parental\Tests\Models\Driver;
 use WF\Parental\Tests\Models\GuardedChild;
@@ -15,7 +16,7 @@ use WF\Parental\Tests\TestCase;
 
 class ParentsAreAwareOfChildrenTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function something()
     {
         $v = new GuardedParent;
@@ -23,7 +24,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(GuardedChild::class, $v->newFromBuilder(['id' => 123, 'type' => 'child']));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_sets_the_type_when_creating_a_child_instance_even_if_given_type_is_wrong()
     {
         $wrongType = Car::query()->create(['type' => "I Like Making Mistakes 🤪"])->fresh();
@@ -38,7 +39,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(InternationalTrip::class, $someKindOfTrip);
     }
 
-    /** @test */
+    #[Test]
     function vehicle_all_method_returns_child_models()
     {
         Car::create();
@@ -50,7 +51,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(Plane::class, $vehicles[1]);
     }
 
-    /** @test */
+    #[Test]
     function type_column_values_can_accept_type_aliases()
     {
         // Looks for "childTypes" property on Vehicle class.
@@ -63,7 +64,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(Plane::class, $vehicles[1]);
     }
 
-    /** @test */
+    #[Test]
     function vehicle_query_builder_get_method_returns_child_models()
     {
         Car::create();
@@ -77,7 +78,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(Vehicle::class, $vehicles[2]);
     }
 
-    /** @test */
+    #[Test]
     function has_many_returns_child_models()
     {
         $driver = Driver::create(['name' => 'Joe']);
@@ -90,7 +91,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(Car::class, $vehicleB);
     }
 
-    /** @test */
+    #[Test]
     function belongs_to_returns_child_models()
     {
         $car = Car::create();
@@ -104,7 +105,7 @@ class ParentsAreAwareOfChildrenTest extends TestCase
         $this->assertInstanceOf(Car::class, $vehicle);
     }
 
-    /** @test */
+    #[Test]
     function many_to_many_returns_child_models()
     {
         $car = Car::create();

@@ -2,6 +2,7 @@
 
 namespace WF\Parental\Tests\Features;
 
+use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Foundation\Testing\WithFaker;
 use WF\Parental\DefaultsMissingAliasToParentClass;
 use WF\Parental\ParentScope;
@@ -18,7 +19,7 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
 {
     use WithFaker;
 
-    /** @test */
+    #[Test]
     public function simple_scope_inheritance_check()
     {
         $this->createTenTrips();
@@ -27,7 +28,7 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
         $this->assertCount(2, (new Trip)->getGlobalScopes());
     }
 
-    /** @test */
+    #[Test]
     public function global_scopes_can_be_added_on_the_fly()
     {
         $this->createTenTrips();
@@ -42,7 +43,7 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
         $this->assertCount(3, (new LocalTrip)->getGlobalScopes());
     }
 
-    /** @test */
+    #[Test]
     public function child_scopes_apply_on_parent_queries()
     {
         $this->createTenTrips();
@@ -60,7 +61,7 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
         $this->assertEquals(9, $localTrip->getKey());
     }
 
-    /** @test */
+    #[Test]
     public function can_modify_query()
     {
         $this->createTenTrips();
@@ -77,7 +78,7 @@ class ParentModelInheritsChildrenScopesTest extends TestCase
         $this->assertInstanceOf(InternationalTrip::class, $trips->shift());
     }
 
-    /** @test */
+    #[Test]
     public function parent_scope_allows_all_types_if_types_default_to_parent_class()
     {
        $this->ensureVehicleHasParentScopeActive();

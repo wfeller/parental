@@ -12,6 +12,11 @@ class Trip extends Model
     protected $parentType = 'trip';
     protected $childColumn = 'trip_type';
 
+    protected $childTypes = [
+        InternationalTrip::class,
+        LocalTrip::class,
+    ];
+
     protected $guarded = [];
 
     protected static function boot()

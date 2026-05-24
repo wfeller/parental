@@ -2,6 +2,7 @@
 
 namespace WF\Parental\Tests\Features;
 
+use PHPUnit\Framework\Attributes\Test;
 use WF\Parental\Tests\Models\Car;
 use WF\Parental\Tests\Models\Train;
 use WF\Parental\Tests\Models\Vehicle;
@@ -11,7 +12,7 @@ use WF\Parental\Tests\TestCase;
 
 class ParentChildEventRegistrationTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function parent_observer_observes_children()
     {
         Vehicle::observe(VehicleObserver::class);
@@ -26,7 +27,7 @@ class ParentChildEventRegistrationTest extends TestCase
         $this->assertEquals(1, $train->driver_id);
     }
 
-    /** @test */
+    #[Test]
     public function child_observer_observes_child()
     {
         Car::observe(CarObserver::class);
@@ -34,7 +35,7 @@ class ParentChildEventRegistrationTest extends TestCase
         $this->assertEquals(2, $car->driver_id);
     }
 
-    /** @test */
+    #[Test]
     public function child_observer_doesnt_observe_other_children()
     {
         Car::observe(CarObserver::class);
@@ -42,7 +43,7 @@ class ParentChildEventRegistrationTest extends TestCase
         $this->assertEmpty($train->driver_id);
     }
 
-    /** @test */
+    #[Test]
     public function child_observer_doesnt_observe_parent()
     {
         Car::observe(CarObserver::class);
@@ -50,7 +51,7 @@ class ParentChildEventRegistrationTest extends TestCase
         $this->assertEmpty($vehicle->driver_id);
     }
 
-    /** @test */
+    #[Test]
     public function register_events_on_children_through_parent()
     {
         Vehicle::created(function ($vehicle) {
@@ -67,7 +68,7 @@ class ParentChildEventRegistrationTest extends TestCase
         $this->assertEquals(3, $train->driver_id);
     }
 
-    /** @test */
+    #[Test]
     public function registering_events_on_child_doesnt_affect_parent()
     {
         Car::created(function ($vehicle) {
@@ -84,7 +85,7 @@ class ParentChildEventRegistrationTest extends TestCase
         $this->assertNull($train->driver_id);
     }
 
-    /** @test */
+    #[Test]
     public function registering_events_in_parent_boot_only_triggers_once()
     {
         $car = Car::query()->create();

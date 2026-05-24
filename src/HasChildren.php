@@ -4,11 +4,11 @@ namespace WF\Parental;
 
 use Illuminate\Support\Arr;
 
+/**
+ * @property array $childTypes
+ */
 trait HasChildren
 {
-    private static $parentBootMethods;
-    private static $discoveredChildren;
-
     protected $hasChildren = true;
 
     protected function initializeHasChildren() : void
@@ -32,17 +32,6 @@ trait HasChildren
                 }
             });
 
-            // Defer child class instantiation to avoid Laravel 13 booting restrictions
-            static::created(function ($model) {
-                if (!static::hasGlobalMacro('parentalChildrenBooted')) {
-                    foreach ((new self)->getChildTypes() as $childClass) {
-                        // Just booting all the child classes to make sure their base global scopes get registered
-                        new $childClass;
-                    }
-                    static::macro('parentalChildrenBooted', true);
-                }
-            });
-
             static::addGlobalScope(new ParentScope);
         }
     }
@@ -54,44 +43,18 @@ trait HasChildren
         // We don't want to register the callbacks that happen in the boot method of the parent, as they'll be called
         // from the child's boot method as well.
         if (static::class === self::class && ! self::parentIsBooting()) {
-            // Defer child class event registration to avoid Laravel 13 booting restrictions
-            static::created(function ($model) use ($event, $callback) {
-                if (!static::hasGlobalMacro('parentalEventRegistered')) {
-                    foreach ((new self)->getChildTypes() as $childClass) {
-                        if ($childClass !== self::class) {
-                            /** @var \Illuminate\Database\Eloquent\Model $childClass */
-                            $childClass::registerModelEvent($event, $callback);
-                        }
-                    }
-                    static::macro('parentalEventRegistered', true);
+            foreach ((new self)->getChildTypes() as $childClass) {
+                if ($childClass !== self::class) {
+                    /** @var \Illuminate\Database\Eloquent\Model $childClass */
+                    $childClass::registerModelEvent($event, $callback);
                 }
-            });
+            }
         }
     }
 
     private static function parentIsBooting() : bool
     {
-        if (! isset(self::$parentBootMethods)) {
-            self::$parentBootMethods[] = 'boot';
-
-            foreach (class_uses_recursive(self::class) as $trait) {
-                self::$parentBootMethods[] = 'boot'.class_basename($trait);
-            }
-
-            self::$parentBootMethods = array_flip(self::$parentBootMethods);
-        }
-
-        // Limit to 32 as I don't think we need to go any deeper (even 10 is probably enough)
-        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 32) as $trace) {
-            $class = isset($trace['class']) ? $trace['class'] : null;
-            $function = isset($trace['function']) ? $trace['function'] : '';
-
-            if ($class === self::class && isset(self::$parentBootMethods[$function])) {
-                return true;
-            }
-        }
-
-        return false;
+        return isset(static::$booting[self::class]);
     }
 
     public function newInstance($attributes = [], $exists = false)
@@ -170,20 +133,13 @@ trait HasChildren
 
     public function getChildTypes() : array
     {
-        return array_flip(array_merge(
-            $this->getDiscoveredChildren(),
-            array_flip(property_exists($this, 'childTypes') ? $this->childTypes : [])
-        ));
-    }
+        $childTypes = $this->childTypes ?? [];
 
-    private function getDiscoveredChildren() : array
-    {
-        if (! isset(self::$discoveredChildren)) {
-            self::$discoveredChildren = file_exists(config('parental.discovered_children_path'))
-                ? Arr::get(require config('parental.discovered_children_path'), self::class, [])
-                : [];
+        $normalized = [];
+        foreach ($childTypes as $key => $class) {
+            $normalized[is_int($key) ? $class : $key] = $class;
         }
 
-        return self::$discoveredChildren;
+        return $normalized;
     }
 }

@@ -2,13 +2,14 @@
 
 namespace WF\Parental\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Database\Eloquent\Model;
 use WF\Parental\HasParent;
 use WF\Parental\Tests\TestCase;
 
 class HasParentModelTest extends TestCase
 {
-    /** @test */
+    #[Test]
     function child_model_has_table_name_of_parent_model()
     {
         $this->assertEquals('parent_models', (new ParentModel)->getTable());
@@ -16,7 +17,7 @@ class HasParentModelTest extends TestCase
         $this->assertEquals('child_model_without_traits', (new ChildModelWithoutTrait)->getTable());
     }
 
-    /** @test */
+    #[Test]
     function child_model_has_same_foreign_key_as_parent()
     {
         $this->assertEquals('parent_model_id', (new ParentModel)->getForeignKey());
@@ -24,7 +25,7 @@ class HasParentModelTest extends TestCase
         $this->assertEquals('child_model_without_trait_id', (new ChildModelWithoutTrait)->getForeignKey());
     }
 
-    /** @test */
+    #[Test]
     function child_model_does_not_have_same_pivot_table_name_as_parent()
     {
         $related = new RelatedModel;
@@ -34,13 +35,13 @@ class HasParentModelTest extends TestCase
         $this->assertEquals('child_model_without_trait_related_model', (new ChildModelWithoutTrait)->joiningTable($related));
     }
 
-    /** @test */
+    #[Test]
     public function child_model_uses_own_table_if_belongs_to_many_defined_on_child_only()
     {
         $this->assertEquals('child_model_related_model', (new ChildModel)->c()->getTable());
     }
 
-    /** @test */
+    #[Test]
     public function models_use_relationship_table_if_defined()
     {
         $this->assertEquals('test_b', (new ChildModel)->b()->getTable());
@@ -49,7 +50,7 @@ class HasParentModelTest extends TestCase
         $this->assertEquals('test_d', (new ChildModel)->d()->getTable());
     }
 
-    /** @test */
+    #[Test]
     public function child_model_uses_parent_table_if_belongs_to_many_defined_on_parent()
     {
         $this->assertEquals('parent_model_related_model', (new ChildModel)->a()->getTable());

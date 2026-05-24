@@ -10,8 +10,6 @@ use Illuminate\Support\Arr;
 
 class ParentScope implements Scope
 {
-    protected static $registered = [];
-
     /**
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @param \Illuminate\Database\Eloquent\Model|\WF\Parental\HasChildren $parent
@@ -19,21 +17,42 @@ class ParentScope implements Scope
      */
     public function apply(Builder $builder, Model $parent) : void
     {
-        if (! isset(static::$registered[get_class($parent)])) {
+        $allScopes = Model::getAllGlobalScopes();
+
+        foreach ($parent->getChildTypes() as $childClass) {
+            if (! isset($allScopes[$childClass])) {
+                new $childClass;
+            }
+        }
+
+        $allScopes = Model::getAllGlobalScopes();
+
+        $applicableChildScopes = [];
+
+        foreach ($parent->getChildTypes() as $childClass) {
+            foreach ($allScopes[$childClass] ?? [] as $key => $scope) {
+                if ($key === 'parental') {
+                    continue;
+                }
+                $applicableChildScopes[(new $childClass)->classToAlias($childClass)][$key] = $scope;
+            }
+        }
+
+        if (empty($applicableChildScopes)) {
             return;
         }
 
-        $builder->where(function (Builder $builder) use ($parent) {
+        $builder->where(function (Builder $builder) use ($parent, $applicableChildScopes) {
             $inheritanceColumn = $parent->qualifyColumn($parent->getInheritanceColumn());
 
             $existingImplementations = $parent->getGlobalScopes();
 
-            foreach (static::$registered[get_class($parent)] as $alias => $implementations) {
+            foreach ($applicableChildScopes as $alias => $implementations) {
                 $builder->orWhere(function (Builder $builder) use ($alias, $inheritanceColumn, $implementations, $existingImplementations) {
                     $builder->where($inheritanceColumn, $alias);
 
                     foreach ($implementations as $key => $implementation) {
-                        if (Arr::has($existingImplementations, str_replace($alias.':', '', $key))) {
+                        if (Arr::has($existingImplementations, $key)) {
                             continue;
                         }
 
@@ -43,14 +62,14 @@ class ParentScope implements Scope
             }
 
             if ($parent instanceof DefaultsMissingAliasToParentClass) {
-                $builder->orWhere(function (Builder $builder) use ($parent, $inheritanceColumn) {
+                $builder->orWhere(function (Builder $builder) use ($inheritanceColumn, $applicableChildScopes) {
                     $builder
-                        ->orWhereNotIn($inheritanceColumn, array_keys(static::$registered[get_class($parent)]))
+                        ->orWhereNotIn($inheritanceColumn, array_keys($applicableChildScopes))
                         ->orWhereNull($inheritanceColumn);
                 });
             } else {
-                $builder->orWhere(function (Builder $builder) use ($parent, $inheritanceColumn) {
-                    $missingChildren = array_diff_key($parent->getChildTypes(), static::$registered[get_class($parent)]);
+                $builder->orWhere(function (Builder $builder) use ($parent, $inheritanceColumn, $applicableChildScopes) {
+                    $missingChildren = array_diff_key($parent->getChildTypes(), $applicableChildScopes);
                     $builder
                         ->orWhereIn($inheritanceColumn, array_keys($missingChildren))
                         ->orWhere($inheritanceColumn, $parent->getParentAlias())
@@ -69,15 +88,5 @@ class ParentScope implements Scope
                 $implementation->apply($builder, $builder->getModel());
             }
         });
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|\WF\Parental\HasParent|\WF\Parental\HasChildren $child
-     * @param string $key
-     * @param $implementation
-     */
-    public static function registerChild(Model $child, string $key, $implementation) : void
-    {
-        static::$registered[get_parent_class($child)][$child->classToAlias(get_class($child))][$key] = $implementation;
     }
 }

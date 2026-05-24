@@ -17,6 +17,7 @@ class Vehicle extends Model implements DefaultsMissingAliasToParentClass
     protected $childTypes = [
         'car' => Car::class,
         'truck' => self::class,
+        Plane::class,
     ];
 
     protected $guarded = [];

@@ -4,7 +4,6 @@ namespace WF\Parental\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Nova;
-use WF\Parental\Commands\DiscoverChildren;
 use WF\Parental\HasChildren;
 use WF\Parental\HasParent;
 
@@ -15,16 +14,6 @@ class ParentalServiceProvider extends ServiceProvider
         if (class_exists(Nova::class)) {
            $this->extendParentNovaResourcesToChildren();
         }
-
-        if ($this->app->runningInConsole()) {
-            $this->publishes([__DIR__.'/../../config/parental.php' => config_path('parental.php')]);
-        }
-    }
-
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__.'/../../config/parental.php', 'parental');
-        $this->commands([DiscoverChildren::class]);
     }
 
     protected function extendParentNovaResourcesToChildren()

@@ -2,6 +2,7 @@
 
 namespace WF\Parental\Tests\Features;
 
+use PHPUnit\Framework\Attributes\Test;
 use WF\Parental\Tests\Models\Car;
 use WF\Parental\Tests\Models\Part;
 use WF\Parental\Tests\Models\Passenger;
@@ -10,7 +11,7 @@ use WF\Parental\Tests\TestCase;
 
 class PolymorphismTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function parts_can_access_vehicles_with_morphed_by_many()
     {
         Vehicle::create()->parts()->create();
@@ -36,7 +37,7 @@ class PolymorphismTest extends TestCase
         $this->assertInstanceOf(Car::class, $part->vehicles()->get()->pop());
     }
 
-    /** @test */
+    #[Test]
     public function can_query_where_has_from_child_to_morphed()
     {
         $notCar = Vehicle::create();
@@ -58,7 +59,7 @@ class PolymorphismTest extends TestCase
         $this->assertInstanceOf(Car::class, $shouldBeCar);
     }
 
-    /** @test */
+    #[Test]
     public function can_query_deeply_from_morphed_to_parental_models_via_where_has()
     {
         Part::create()->vehicles()->attach($car = Car::create());
@@ -72,7 +73,7 @@ class PolymorphismTest extends TestCase
         $this->assertEquals('Robert', $part->vehicles()->first()->passengers()->value('name'));
     }
 
-    /** @test */
+    #[Test]
     public function can_query_deeply_from_parental_models_to_morphed_via_where_has()
     {
         $car = Car::create();
